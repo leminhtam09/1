@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng Xếp Hạng - Học Liệu 12A1 Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon-box"><i class="fa-solid fa-trophy"></i></div>
+        <span>Bảng Vàng <strong>Học Liệu 12A1 Pro</strong></span>
+      </a>
+    </div>
+    <div class="header-right">
+      <a href="dashboard.html" class="nav-pill"><i class="fa-solid fa-house"></i> Về Trang Chủ</a>
+    </div>
+  </header>
+  <main class="main-content">
+    <section class="exam-section">
+      <h4 class="text-lg font-extrabold text-slate-800 mb-3"><i class="fa-solid fa-medal text-amber-500 mr-2"></i> Top Học Sinh Đạt Điểm Cao Nhất</h4>
+      <table class="table-lb">
+        <thead>
+          <tr><th>Hạng</th><th>Học sinh</th><th>Môn / Bài Thi</th><th>Số câu đúng</th><th>Điểm cao nhất</th><th>Thời gian</th></tr>
+        </thead>
+        <tbody id="leaderboardBody">
+          <tr><td colspan="6" style="text-align:center;">Đang tải bảng xếp hạng real-time...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Hàm kiểm tra tài khoản Admin tối cao duy nhất: le733833@gmail.com
+    function isSuperAdmin() {
+      return request.auth != null && request.auth.token.email == "le733833@gmail.com";
+    }
+
+    // Hàm kiểm tra người dùng đã đăng nhập
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // 1. MODULE 5: Cộng đồng Báo lỗi & Góp ý Trực tuyến Real-time
+    // Cho phép đọc và gửi báo lỗi trực tiếp từ môi trường chạy thật & local (127.0.0.1:5500)
+    match /bug_reports/{reportId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isSuperAdmin();
+    }
+
+    match /feedbacks/{feedbackId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isSuperAdmin();
+    }
+
+    // 2. MODULE 4: Quản lý Tài khoản & Phân quyền (RBAC)
+    // Bảo vệ trường role: chỉ le733833@gmail.com mới được mang role "admin"
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if isSignedIn() && (
+        isSuperAdmin() ||
+        (request.auth.uid == userId &&
+          (!("role" in request.resource.data) ||
+           request.resource.data.role == "member" ||
+           isSuperAdmin()))
+      );
+      allow delete: if isSuperAdmin();
+    }
+
+    // 3. Cấu hình hệ thống & Hình nền toàn cục Real-time (system_settings/global_ui)
+    match /system_settings/{settingId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    match /system_config/{configId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // 4. Băng chuyền ảnh chạy liên tục Real-time (marquee_images 4:3 & 16:9)
+    match /marquee_images/{imageId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // 5. Bảng xếp hạng Real-time (Marquee Leaderboard)
+    match /leaderboard/{entryId} {
+      allow read, create: if true;
+      allow update, delete: if isSuperAdmin();
+    }
+
+    // 6. Kho đề thi các môn học (exams_Toán, exams_Lí, exams_Hóa, exams_Địa, v.v.)
+    match /{examCollection}/{examId} {
+      allow read: if true;
+      allow write: if isSignedIn() || isSuperAdmin();
+    }
+  }
+}
