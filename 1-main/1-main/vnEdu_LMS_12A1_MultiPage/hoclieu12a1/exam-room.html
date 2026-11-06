@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phòng Thi Trực Tuyến - Học Liệu 12A1.1 Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="exam-room-body">
+  <!-- HEADER PHÒNG THI -->
+  <header class="header">
+    <div class="header-left">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+        <span>Học Liệu <strong>12A1.1 Pro</strong></span>
+      </a>
+      <span class="nav-pill active">
+        <i class="fa-solid fa-pen-ruler"></i> Phòng Thi Trực Tuyến
+      </span>
+    </div>
+    <div class="header-right">
+      <a href="dashboard.html" class="nav-pill">
+        <i class="fa-solid fa-house"></i> Về Trang Chủ
+      </a>
+    </div>
+  </header>
+
+  <div class="exam-room-container">
+    <div id="cheatWarning" class="cheat-warning-banner hidden">
+      ⚠️ CẢNH BÁO PHÒNG THI: Em vừa rời khỏi màn hình làm bài! Hãy tập trung hoàn thành bài thi nhé!
+    </div>
+
+    <!-- Kết quả sau khi nộp bài -->
+    <div id="examResultBanner" class="hidden mb-5 p-6 rounded-2xl bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-white shadow-xl">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs uppercase font-bold tracking-wider bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full border border-emerald-400/30">
+            Đã hoàn thành &amp; đối chiếu đáp án gốc
+          </span>
+          <h3 class="text-2xl font-extrabold mt-2" id="resultSummaryTitle">Kết quả bài thi: 0/10 điểm</h3>
+          <p class="text-sm text-indigo-200 mt-1" id="resultSummarySub">Đã đồng bộ kết quả lên Bảng Xếp Hạng Real-time.</p>
+        </div>
+        <div class="flex gap-3">
+          <a href="dashboard.html" class="btn-primary !bg-white !text-indigo-900 font-bold">
+            <i class="fa-solid fa-trophy"></i> Xem BXH Trên Trang Chủ
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="exam-layout">
+      <div class="questions-column">
+        <div class="exam-info-header pb-4 mb-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span id="roomExamSubjectBadge" class="text-xs font-bold uppercase px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-700">Môn Thi</span>
+            <h2 id="roomExamName" class="text-xl font-extrabold text-slate-800 mt-1">Đang tải đề thi...</h2>
+            <p class="text-xs text-slate-500 mt-1">
+              Hệ thống tự động thu bài, chấm điểm theo đáp án chuẩn &amp; hiển thị lời giải chi tiết khi nộp bài hoặc hết giờ
+            </p>
+          </div>
+        </div>
+
+        <div id="questionsContainer" class="questions-flow"></div>
+
+        <div class="exam-footer-actions flex flex-wrap gap-3 pt-4 border-t border-slate-200">
+          <button id="btnSubmitExam" class="btn-success" type="button">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Nộp Bài &amp; Chấm Điểm Ngay
+          </button>
+          <a href="dashboard.html" class="btn-secondary" style="text-decoration:none;">
+            <i class="fa-solid fa-arrow-left"></i> Quay lại Trang Chủ
+          </a>
+        </div>
+      </div>
+
+      <div class="exam-sidebar">
+        <div class="timer-box">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-500 uppercase">
+            <span><i class="fa-regular fa-clock text-indigo-600 mr-1"></i> Thời gian còn lại</span>
+            <span id="timerStatusTag" class="text-emerald-600">Đang tính giờ</span>
+          </div>
+          <div id="timerDisplay">50:00</div>
+
+          <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between gap-2 text-xs">
+            <span class="font-semibold text-slate-600">Đặt lại phút:</span>
+            <div class="flex items-center gap-1">
+              <input type="number" id="roomAdjustDurationInput" min="1" max="300" value="50" class="w-16 p-1 border border-slate-300 rounded text-center font-bold">
+              <button type="button" id="btnApplyRoomDuration" class="btn-primary !py-1 !px-2.5 text-xs">Áp dụng</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="palette-box">
+          <h5 class="font-extrabold text-sm text-slate-800">Bảng câu hỏi (<span id="answeredCountBadge">0/0</span>):</h5>
+          <p class="text-xs text-slate-500 mt-1">Xanh lá: Đã trả lời | Xám: Chưa làm</p>
+          <div class="palette-grid" id="paletteGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHATBOT "ANH BA - CHỦ NHIỆM 12A1.1" TRONG PHÒNG THI -->
+  <div class="chatbot-wrapper">
+    <div id="chatbotWindow" class="chat-window hidden">
+      <div class="chat-header">
+        <div class="chat-title">
+          <img id="anhBaHeaderAvatar" class="anhba-avatar-sm anhba-dynamic-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AnhBa12A1" alt="Anh Ba">
+          <div>
+            <div class="leading-tight">Anh Ba - Chủ nhiệm 12A1.1</div>
+            <div class="text-[11px] font-normal opacity-90" id="anhBaKbCountBadge">Tra cứu trực tiếp kho đề nội bộ</div>
+          </div>
+        </div>
+        <div class="chat-header-controls">
+          <button id="btnToggleChatSettings" class="chat-icon-btn" type="button" title="Đổi Avatar Anh Ba">
+            <i class="fa-solid fa-image"></i>
+          </button>
+          <button id="btnCloseChat" class="chat-icon-btn" type="button">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="chatSettingsPanel" class="chat-settings-panel hidden">
+        <div class="mb-2">
+          <label class="block font-semibold text-slate-700 mb-1">Đổi Avatar Anh Ba - Chủ nhiệm 12A1.1:</label>
+          <input type="text" id="anhBaAvatarUrlInput" class="w-full p-1.5 border border-slate-300 rounded text-xs mb-1" placeholder="Dán link ảnh Avatar...">
+          <input type="file" id="anhBaAvatarFileInput" accept="image/*" class="text-xs">
+        </div>
+        <button type="button" id="btnSaveAnhBaSettings" class="btn-primary text-xs py-1 px-3">Lưu Avatar</button>
+      </div>
+
+      <div class="chat-body" id="chatBody">
+        <div class="bot-msg-row">
+          <img class="anhba-avatar-sm anhba-dynamic-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AnhBa12A1" alt="Anh Ba">
+          <div class="bot-msg">Chào em! Thầy là <b>Anh Ba - Chủ nhiệm 12A1.1</b> đây. Trong lúc ôn luyện câu nào cần giải thích đáp án chuẩn thì bấm nút <b>"Hỏi Anh Ba"</b> ngay cạnh câu hỏi hoặc copy câu hỏi dán vào đây nhé!</div>
+        </div>
+      </div>
+
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Copy câu hỏi hoặc nhập số câu để hỏi Anh Ba..." />
+        <button id="btnSendChat" type="button"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+
+    <button id="btnOpenChat" class="chatbot-floating-btn" type="button">
+      <img class="anhba-avatar-sm anhba-dynamic-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AnhBa12A1" alt="Anh Ba">
+      <span>Anh Ba - Chủ nhiệm 12A1.1</span>
+    </button>
+  </div>
+
+  <!-- TRÌNH PHÁT NHẠC MP3 TÙY CHỈNH TRONG PHÒNG THI -->
+  <aside id="miniMusicDrawer" class="mini-music-drawer collapsed">
+    <button id="btnToggleMusicDrawer" class="music-toggle-handle" type="button" title="Thu gọn / Mở rộng trình phát nhạc MP3">
+      <i id="musicDrawerArrow" class="fa-solid fa-chevron-left"></i>
+      <i class="fa-solid fa-music"></i>
+    </button>
+    <div class="music-card">
+      <div class="music-top-row">
+        <div id="musicVinylDisc" class="vinyl-disc"><div class="vinyl-center"></div></div>
+        <div class="music-track-info">
+          <div id="musicCurrentTitle" class="music-track-title">Chưa có bài hát nào</div>
+          <div id="musicCurrentArtist" class="music-track-artist">Hãy tải file MP3 từ máy lên</div>
+        </div>
+      </div>
+
+      <label class="w-full mb-2.5 py-2 px-3 rounded-xl bg-gradient-to-r from-indigo-600 to-pink-600 hover:opacity-95 text-white font-bold text-xs cursor-pointer flex items-center justify-center gap-2 shadow">
+        <i class="fa-solid fa-folder-plus"></i>
+        <span>+ Chọn File Nhạc MP3 Từ Máy</span>
+        <input type="file" id="customMusicFileInput" accept="audio/mp3,audio/*" multiple class="hidden">
+      </label>
+
+      <div class="music-seek-wrapper">
+        <input type="range" id="musicSeekBar" class="music-seek-bar" min="0" max="100" step="0.1" value="0">
+        <div class="music-time-row">
+          <span id="musicCurrentTimeText">00:00</span>
+          <span id="musicDurationTimeText">00:00</span>
+        </div>
+      </div>
+
+      <div class="music-controls">
+        <button id="btnMusicPrev" class="music-btn" type="button"><i class="fa-solid fa-backward-step"></i></button>
+        <button id="btnMusicPlayPause" class="music-btn play-main" type="button"><i id="musicPlayIcon" class="fa-solid fa-play"></i></button>
+        <button id="btnMusicNext" class="music-btn" type="button"><i class="fa-solid fa-forward-step"></i></button>
+      </div>
+
+      <div class="music-volume-row">
+        <i class="fa-solid fa-volume-low"></i>
+        <input type="range" id="musicVolumeSlider" min="0" max="1" step="0.02" value="0.8">
+        <i class="fa-solid fa-volume-high"></i>
+      </div>
+
+      <div class="flex items-center justify-between text-[11px] text-slate-300 font-semibold mb-1">
+        <span>Danh sách phát (<span id="musicPlaylistCount">0</span> bài):</span>
+        <button type="button" id="btnClearAllMusic" class="text-rose-400 hover:underline">Xóa hết</button>
+      </div>
+      <div id="musicDynamicPlaylist" class="music-playlist-box">
+        <div class="text-[11px] text-slate-400 text-center py-3">Chưa có bài nhạc nào.</div>
+      </div>
+
+      <audio id="hiddenAudioElement" preload="metadata"></audio>
+    </div>
+  </aside>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Học Liệu 12A1 Pro - Cổng Luyện Thi THPT Quốc Gia</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Cơ chế chuyển tab tức thì không phụ thuộc thời gian tải mạng của module
+    window.switchAuthTab = function(mode) {
+      var isReg = mode === 'register';
+      window._isRegisterMode = isReg;
+      var loginBtn = document.getElementById('tabLoginBtn');
+      var regBtn = document.getElementById('tabRegisterBtn');
+      var dispGroup = document.getElementById('displayNameGroup');
+      var actionBtn = document.getElementById('authActionBtn');
+      var msg = document.getElementById('authMsg');
+
+      if (loginBtn && regBtn) {
+        if (isReg) {
+          regBtn.classList.add('active');
+          loginBtn.classList.remove('active');
+          if (actionBtn) actionBtn.innerHTML = '<i class="fa-solid fa-user-plus mr-1"></i> Tạo Tài Khoản Mới';
+          if (dispGroup) dispGroup.style.display = 'flex';
+        } else {
+          loginBtn.classList.add('active');
+          regBtn.classList.remove('active');
+          if (actionBtn) actionBtn.innerHTML = '<i class="fa-solid fa-bolt mr-1"></i> Đăng Nhập Hệ Thống';
+          if (dispGroup) dispGroup.style.display = 'none';
+        }
+      }
+      if (msg) msg.textContent = '';
+    };
+
+    window.handleAuthSubmit = function() {
+      if (typeof window._moduleAuthSubmit === 'function') {
+        window._moduleAuthSubmit();
+      } else {
+        var msg = document.getElementById('authMsg');
+        if (msg) {
+          msg.style.color = '#a5b4fc';
+          msg.textContent = '⏳ Đang khởi tạo kết nối bảo mật Firebase, vui lòng đợi trong giây lát...';
+        }
+      }
+    };
+    window.login = window.handleAuthSubmit;
+    window.register = window.handleAuthSubmit;
+  </script>
+</head>
+<body class="auth-page-body">
+  <!-- Canvas Three.js 3D Galaxy & Floating Polyhedra toàn màn hình -->
+  <canvas id="threeBgCanvas"></canvas>
+
+  <div class="auth-container">
+    <div class="auth-card glassmorphism">
+      <div class="auth-brand">
+        <div class="auth-brand-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h2>HỌC LIỆU 12A1 PRO</h2>
+        <p>Hệ thống luyện thi thông minh chuẩn cấu trúc THPT Quốc Gia</p>
+      </div>
+
+      <div class="tab-buttons">
+        <button id="tabLoginBtn" class="tab-btn active" type="button" onclick="window.switchAuthTab('login')">
+          <i class="fa-solid fa-right-to-bracket mr-1"></i> Đăng Nhập
+        </button>
+        <button id="tabRegisterBtn" class="tab-btn" type="button" onclick="window.switchAuthTab('register')">
+          <i class="fa-solid fa-user-plus mr-1"></i> Đăng Ký Tài Khoản
+        </button>
+      </div>
+
+      <div class="input-group" id="displayNameGroup" style="display: none;">
+        <label for="authDisplayName"><i class="fa-solid fa-user text-indigo-400 mr-1"></i> Họ và tên hiển thị:</label>
+        <input type="text" id="authDisplayName" placeholder="Ví dụ: Nguyễn Văn A - 12A1" autocomplete="name">
+      </div>
+
+      <div class="input-group">
+        <label for="authEmail"><i class="fa-solid fa-envelope text-pink-400 mr-1"></i> Email học sinh:</label>
+        <input type="email" id="authEmail" placeholder="hocsinh@hoclieu12a1.edu.vn" autocomplete="email">
+      </div>
+
+      <div class="input-group">
+        <label for="authPassword"><i class="fa-solid fa-lock text-cyan-400 mr-1"></i> Mật khẩu bảo mật:</label>
+        <input type="password" id="authPassword" placeholder="Nhập tối thiểu 6 ký tự..." autocomplete="current-password">
+      </div>
+
+      <button id="authActionBtn" class="btn-glow full-width mt-2" type="button" onclick="window.handleAuthSubmit()">
+        <i class="fa-solid fa-bolt mr-1"></i> Đăng Nhập Hệ Thống
+      </button>
+
+      <p id="authMsg" class="msg-text"></p>
+
+      <div class="mt-5 pt-4 border-t border-white/10 text-center text-xs text-slate-300 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-cloud-bolt text-emerald-400"></i>
+        <span>Tự động đồng bộ hồ sơ Cloud Firestore &amp; AI Gia Sư Anh Ba</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

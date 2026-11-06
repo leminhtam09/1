@@ -1,0 +1,342 @@
+/**
+ * ANHBA MEDIA & LIGHTBOX ZOOM STYLESHEET
+ * Bọc namespace cô lập: .anhba-*, .lightbox-zoom-*
+ * Hoàn toàn độc lập, không ghi đè bất kỳ style nào của Login, Register hay Navbar
+ */
+
+/* ==========================================================================
+   1. ASPECT RATIO PRESERVATION CLASSES (CHỐNG MÉO & CHỐNG GIẬT KHUNG HÌNH CLS)
+   ========================================================================== */
+.anhba-media-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: #0f172a;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+  user-select: none;
+}
+
+.anhba-media-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+/* Khung hình chuẩn 4:3 */
+.anhba-ratio-4-3 {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: #1e293b;
+}
+
+/* Khung hình chuẩn 16:9 */
+.anhba-ratio-16-9 {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: #1e293b;
+}
+
+/* Thuộc tính ảnh chống vỡ nét, phủ trọn khung */
+.anhba-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  cursor: zoom-in;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+}
+
+.anhba-media-card:hover .anhba-media-img {
+  transform: scale(1.05);
+}
+
+.anhba-media-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  backdrop-filter: blur(6px);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.anhba-badge-43 {
+  background: rgba(99, 102, 241, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.anhba-badge-169 {
+  background: rgba(236, 72, 153, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   2. KHU VỰC ADMIN UPLOAD AVATAR CHATBOT ANH BA (DRAG & DROP, PREVIEW)
+   ========================================================================== */
+.anhba-avatar-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  font-family: inherit;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.anhba-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.anhba-dropzone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 18px 12px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f8fafc;
+  transition: all 0.22s ease;
+  position: relative;
+}
+
+.anhba-dropzone:hover,
+.anhba-dropzone.anhba-dropzone-dragover {
+  border-color: #6366f1;
+  background-color: #eef2ff;
+}
+
+.anhba-preview-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.anhba-preview-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid #6366f1;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  background: #f1f5f9;
+}
+
+.anhba-btn-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.anhba-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+}
+
+.anhba-btn-primary {
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.anhba-btn-primary:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.anhba-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.anhba-btn-secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.anhba-btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+.anhba-status-msg {
+  font-size: 11px;
+  margin-top: 8px;
+  text-align: center;
+  min-height: 16px;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   3. LIGHTBOX MODAL ZOOM ĐỘC LẬP (Z-INDEX CAO NHẤT, MƯỢT MÀ)
+   ========================================================================== */
+.lightbox-zoom-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+}
+
+.lightbox-zoom-overlay.lightbox-zoom-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-zoom-wrapper {
+  position: relative;
+  max-width: 92vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.lightbox-zoom-viewport {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  max-height: 80vh;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: grab;
+}
+
+.lightbox-zoom-viewport:active {
+  cursor: grabbing;
+}
+
+.lightbox-zoom-img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: transform 0.1s ease-out;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.lightbox-zoom-caption {
+  margin-top: 12px;
+  color: #f1f5f9;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.75);
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+/* Nút Đóng [X] */
+.lightbox-zoom-btn-close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1000000;
+}
+
+.lightbox-zoom-btn-close:hover {
+  background: #ef4444;
+  border-color: #ef4444;
+  transform: rotate(90deg) scale(1.08);
+}
+
+/* Thanh công cụ phóng to / thu nhỏ góc dưới */
+.lightbox-zoom-toolbar {
+  position: absolute;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
+  padding: 6px 16px;
+  backdrop-filter: blur(8px);
+  z-index: 1000000;
+}
+
+.lightbox-zoom-tool-btn {
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.lightbox-zoom-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.lightbox-zoom-scale-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #38bdf8;
+  min-width: 44px;
+  text-align: center;
+}
